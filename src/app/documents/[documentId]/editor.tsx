@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { TaskItem, TaskList } from '@tiptap/extension-list';
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
+import ImageResize from 'tiptap-extension-resize-image';
 
 const Editor = () => {
   const editor = useEditor({
@@ -16,6 +17,7 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      ImageResize,
       Table,
       TableCell,
       TableHeader,

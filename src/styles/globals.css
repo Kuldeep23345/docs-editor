@@ -130,6 +130,7 @@
 }
 
 .tiptap {
+  /* image  */
   img {
     display: block;
     height: auto;
@@ -137,7 +138,7 @@
     max-width: 100%;
 
     &.ProseMirror-selectednode {
-      outline: 3px solid var(--purple);
+      outline: 3px solid var(--primary);
     }
   }
   /* Table-specific styling */
