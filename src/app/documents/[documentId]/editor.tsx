@@ -6,8 +6,14 @@ import { TaskItem, TaskList } from '@tiptap/extension-list';
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
 import ImageResize from 'tiptap-extension-resize-image';
 
+import useEditorStore from '@/store/use-editor-store';
+
 const Editor = () => {
+  const { setEditor } = useEditorStore();
   const editor = useEditor({
+    onCreate: ({ editor }) => {
+      setEditor(editor);
+    },
     editorProps: {
       attributes: {
         style: 'padding-left:56px; padding-right:56px;',
