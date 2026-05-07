@@ -3,11 +3,13 @@ import { cn } from '@/lib/utils';
 import {
   BoldIcon,
   ItalicIcon,
+  ListTodoIcon,
   LucideIcon,
   MessageSquareCheckIcon,
   MessageSquarePlusIcon,
   PrinterIcon,
   Redo2Icon,
+  RemoveFormattingIcon,
   SpellCheckIcon,
   UnderlineIcon,
   Undo2,
@@ -96,6 +98,20 @@ export default function Toolbar() {
           onClick: () => console.log('TODO - implement comment functionality'),
           isActive: false,
         },
+        {
+          label: 'List Todo',
+          icon: ListTodoIcon,
+          onClick: () => editor?.chain().focus().toggleTaskList().run(),
+          isActive: editor?.isActive('taskList'),
+        },
+        {
+          label: 'Remove Formatting',
+          icon:RemoveFormattingIcon ,
+          onClick: () => editor?.chain().focus().unsetAllMarks().run(),
+          isActive: false,
+        },
+        
+
       ],
     ];
   return (
