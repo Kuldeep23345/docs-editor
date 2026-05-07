@@ -2,6 +2,7 @@
 import { cn } from '@/lib/utils';
 import {
   BoldIcon,
+  ChevronDownIcon,
   ItalicIcon,
   ListTodoIcon,
   LucideIcon,
@@ -22,6 +23,59 @@ interface ToolBarButtonProps {
   isActive?: boolean;
   icon: LucideIcon;
 }
+
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+
+const FontFamilyButton = () => {
+  const { editor } = useEditorStore();
+
+  const fonts = [
+    { label: 'Arial', value: 'Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Palatino', value: 'Palatino, serif' },
+    { label: 'Impact', value: 'Impact, sans-serif' },
+    { label: 'Verdana', value: 'Verdana, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, sans-serif' },
+    { label: 'Garamond', value: 'Garamond, serif' },
+    { label: 'Trebuchet MS', value: 'Trebuchet MS, sans-serif' },
+    { label: 'Courier New', value: 'Courier New, monospace' },
+    { label: 'Comic Sans MS', value: 'Comic Sans MS, cursive, sans-serif' },
+    { label: 'TimesNewRoman', value: 'Times New Roman, serif' },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <button className="h-7 w-30 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <span className="truncate">
+            {editor?.getAttributes('textStyle').fontFamily || 'Arial'}
+          </span>
+          <ChevronDownIcon className="ml-2 size-4 shrink-0" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-1 flex-col gap-y-1">
+        {fonts.map(({ label, value }) => (
+          <button
+            key={value}
+            className={cn(
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm',
+              editor?.getAttributes('textStyle')?.fontFamily === value && 'bg-enutral-200/80'
+            )}
+            style={{ fontFamily: value }}
+            onClick={() => editor?.chain().focus().setFontFamily(value).run()}
+          >
+            <span className="text-sm">{label}</span>
+          </button>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 const ToolBarButton = ({ onClick, isActive, icon: Icon }: ToolBarButtonProps) => {
   return (
@@ -106,12 +160,10 @@ export default function Toolbar() {
         },
         {
           label: 'Remove Formatting',
-          icon:RemoveFormattingIcon ,
+          icon: RemoveFormattingIcon,
           onClick: () => editor?.chain().focus().unsetAllMarks().run(),
           isActive: false,
         },
-        
-
       ],
     ];
   return (
@@ -120,6 +172,7 @@ export default function Toolbar() {
         <ToolBarButton key={item.label} {...item} />
       ))}
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
+      <FontFamilyButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
