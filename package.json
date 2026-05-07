@@ -10,6 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@tiptap/extension-heading": "^3.22.5",
     "@tiptap/extension-image": "^3.22.5",
     "@tiptap/extension-list": "^3.22.5",
     "@tiptap/extension-table": "^3.22.5",
