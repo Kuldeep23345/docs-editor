@@ -6,6 +6,9 @@ import { Underline } from '@tiptap/extension-underline';
 import { TaskItem, TaskList } from '@tiptap/extension-list';
 import { FontFamily, TextStyle } from '@tiptap/extension-text-style';
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
+import { Highlight } from '@tiptap/extension-highlight';
+import {Color} from '@tiptap/extension-color';
+
 import ImageResize from 'tiptap-extension-resize-image';
 
 import useEditorStore from '@/store/use-editor-store';
@@ -43,6 +46,10 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      Highlight.configure({
+        multicolor: true,
+      }),
+      Color,
       TextStyle,
       FontFamily,
       Underline,

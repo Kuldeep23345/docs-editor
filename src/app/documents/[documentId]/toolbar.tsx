@@ -1,12 +1,13 @@
 'use client';
 import { cn } from '@/lib/utils';
+import { type ColorResult, SketchPicker } from 'react-color';
 import {
   BoldIcon,
   ChevronDownIcon,
+  HighlighterIcon,
   ItalicIcon,
   ListTodoIcon,
   LucideIcon,
-  MessageSquareCheckIcon,
   MessageSquarePlusIcon,
   PrinterIcon,
   Redo2Icon,
@@ -28,8 +29,51 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+const HighlightColorButton = () => {
+  const { editor } = useEditorStore();
+
+  const value = editor?.getAttributes('highlight').color || '#FFFFFF';
+
+  const onChange = (color: ColorResult) => {
+    editor?.chain().focus().setHighlight({color: color.hex}).run();
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+       <HighlighterIcon className='size-4'/>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-0 w-auto" align="center">
+        <SketchPicker color={value} onChange={onChange} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+const TextColorButton = () => {
+  const { editor } = useEditorStore();
+
+  const value = editor?.getAttributes('textStyle').color || '#000000';
+
+  const onChange = (color: ColorResult) => {
+    editor?.chain().focus().setColor(color.hex).run();
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <span className="text-xs">A</span>
+          <div className="h-0.5 w-full " style={{ backgroundColor: value }} />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-0 w-auto" align="center">
+        <SketchPicker color={value} onChange={onChange} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 const HeadingLevelButton = () => {
   const { editor } = useEditorStore();
@@ -79,7 +123,7 @@ const HeadingLevelButton = () => {
             className={cn(
               'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
               (value === 0 && !editor?.isActive('heading')) ||
-                (editor?.isActive('heading', { level: value }) && 'bg-neutral-200/80'),
+                (editor?.isActive('heading', { level: value }) && 'bg-neutral-200/80')
             )}
           >
             {label}
@@ -87,7 +131,6 @@ const HeadingLevelButton = () => {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-    
   );
 };
 
@@ -95,17 +138,17 @@ const FontFamilyButton = () => {
   const { editor } = useEditorStore();
 
   const fonts = [
-    { label: 'Arial', value: 'Arial, sans-serif' },
-    { label: 'Georgia', value: 'Georgia, serif' },
-    { label: 'Palatino', value: 'Palatino, serif' },
-    { label: 'Impact', value: 'Impact, sans-serif' },
-    { label: 'Verdana', value: 'Verdana, sans-serif' },
-    { label: 'Helvetica', value: 'Helvetica, sans-serif' },
-    { label: 'Garamond', value: 'Garamond, serif' },
-    { label: 'Trebuchet MS', value: 'Trebuchet MS, sans-serif' },
-    { label: 'Courier New', value: 'Courier New, monospace' },
-    { label: 'Comic Sans MS', value: 'Comic Sans MS, cursive, sans-serif' },
-    { label: 'TimesNewRoman', value: 'Times New Roman, serif' },
+    { label: 'Arial', value: 'Arial' },
+    { label: 'Georgia', value: 'Georgia' },
+    { label: 'Palatino', value: 'Palatino' },
+    { label: 'Impact', value: 'Impact' },
+    { label: 'Verdana', value: 'Verdana' },
+    { label: 'Helvetica', value: 'Helvetica' },
+    { label: 'Garamond', value: 'Garamond' },
+    { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+    { label: 'Courier New', value: 'Courier New' },
+    { label: 'Comic Sans MS', value: 'Comic Sans MS' },
+    { label: 'TimesNewRoman', value: 'Times New Roman' },
   ];
 
   return (
@@ -236,10 +279,13 @@ export default function Toolbar() {
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <HeadingLevelButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
+
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       {sections[1].map((item) => (
         <ToolBarButton key={item.label} {...item} />
       ))}
+      <TextColorButton />
+      <HighlightColorButton />
 
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       {sections[2].map((item) => (
