@@ -9,6 +9,7 @@ import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table
 import { Highlight } from '@tiptap/extension-highlight';
 import { Color } from '@tiptap/extension-color';
 import { Link } from '@tiptap/extension-link';
+import TextAlign from '@tiptap/extension-text-align';
 
 import Image from '@tiptap/extension-image';
 import ImageResize from 'tiptap-extension-resize-image';
@@ -48,6 +49,10 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        
+      }),
       Link.configure({
         openOnClick: false,
         autolink: true,
