@@ -17,6 +17,8 @@ import {
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlusIcon,
+  MinusIcon,
+  PlusIcon,
   PrinterIcon,
   Redo2Icon,
   RemoveFormattingIcon,
@@ -52,12 +54,104 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+const FontSizeButton = () => {
+  const { editor } = useEditorStore();
+  const currentFontSize = editor?.getAttributes('textStyle').fontSize
+    ? editor?.getAttributes('textStyle').fontSize.replace('px', '')
+    : '16';
+
+  const [fontSize, setFontSize] = useState(currentFontSize);
+  const [inputValue, setInputValue] = useState(fontSize);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const updateFontSize = (newSize: string) => {
+    const size = parseInt(newSize);
+
+    if (!isNaN(size) && size > 0) {
+      editor?.chain().focus().setFontSize(`${size}px`).run();
+      setFontSize(newSize);
+      setInputValue(newSize);
+      setIsEditing(false);
+    }
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      updateFontSize(inputValue);
+      editor?.commands.focus();
+    }
+  };
+  const handleInputBlur = () => {
+    updateFontSize(inputValue);
+  };
+
+  const increment = () => {
+    const newSize = parseInt(fontSize) + 1;
+    updateFontSize(newSize.toString());
+  };
+  const decrement = () => {
+    const newSize = parseInt(fontSize) - 1;
+    if (newSize > 0) {
+      updateFontSize(newSize.toString());
+    }
+  };
+  return (
+    <div className="flex items-center gap-x-0.5">
+      <button
+        onClick={decrement}
+        className="size-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 "
+      >
+        <MinusIcon className="size-4" />
+      </button>
+      {isEditing ? (
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onBlur={handleInputBlur}
+          className="size-7 min-w-10 text-center border border-neutral-400 rounded-sm focus:outline-none focus:ring-0 bg-transparent "
+          autoFocus
+        />
+      ) : (
+        <button
+          onClick={() => {
+            setIsEditing(true);
+            setInputValue(currentFontSize);
+          }}
+          className="size-7 text-center text-sm min-w-10  border border-neutral-400 rounded-sm bg-transparent cursor-text  hover:bg-neutral-200/80"
+        >
+          {currentFontSize}
+        </button>
+      )}
+       <button
+        onClick={increment}
+        className="size-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 "
+      >
+        <PlusIcon className="size-4" />
+      </button>
+    </div>
+  );
+};
 const ListButton = () => {
   const { editor } = useEditorStore();
 
   const Lists = [
-    { label: 'Bullet list', icon: ListIcon, isActive: () => editor?.isActive('bulletList'),onClick:()=>editor?.chain().focus().toggleBulletList().run() },
-    { label: 'Numbered list', icon: ListOrderedIcon, isActive: () => editor?.isActive('orderedList'),onClick:()=>editor?.chain().focus().toggleOrderedList().run() },
+    {
+      label: 'Bullet list',
+      icon: ListIcon,
+      isActive: () => editor?.isActive('bulletList'),
+      onClick: () => editor?.chain().focus().toggleBulletList().run(),
+    },
+    {
+      label: 'Numbered list',
+      icon: ListOrderedIcon,
+      isActive: () => editor?.isActive('orderedList'),
+      onClick: () => editor?.chain().focus().toggleOrderedList().run(),
+    },
   ];
 
   return (
@@ -68,7 +162,7 @@ const ListButton = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-1 w-full flex flex-col gap-y-1.5">
-        {Lists.map(({label,icon:Icon,isActive,onClick}) => (
+        {Lists.map(({ label, icon: Icon, isActive, onClick }) => (
           <button
             key={label}
             onClick={onClick}
@@ -473,7 +567,7 @@ export default function Toolbar() {
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <HeadingLevelButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
-
+      <FontSizeButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       {sections[1].map((item) => (
         <ToolBarButton key={item.label} {...item} />
@@ -485,7 +579,7 @@ export default function Toolbar() {
       <LinkButton />
       <ImageButton />
       <AlignButton />
-      <ListButton/>
+      <ListButton />
       {sections[2].map((item) => (
         <ToolBarButton key={item.label} {...item} />
       ))}
