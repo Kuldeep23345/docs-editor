@@ -12,6 +12,8 @@ import {
   ImageIcon,
   ItalicIcon,
   Link2Icon,
+  ListIcon,
+  ListOrderedIcon,
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlusIcon,
@@ -50,6 +52,39 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+const ListButton = () => {
+  const { editor } = useEditorStore();
+
+  const Lists = [
+    { label: 'Bullet list', icon: ListIcon, isActive: () => editor?.isActive('bulletList'),onClick:()=>editor?.chain().focus().toggleBulletList().run() },
+    { label: 'Numbered list', icon: ListOrderedIcon, isActive: () => editor?.isActive('orderedList'),onClick:()=>editor?.chain().focus().toggleOrderedList().run() },
+  ];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <ListIcon className="size-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-1 w-full flex flex-col gap-y-1.5">
+        {Lists.map(({label,icon:Icon,isActive,onClick}) => (
+          <button
+            key={label}
+            onClick={onClick}
+            className={cn(
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+              isActive() && 'bg-neutral-200/80'
+            )}
+          >
+            <Icon className="size-4" />
+            <span className="size-sm">{label}</span>
+          </button>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 const AlignButton = () => {
   const { editor } = useEditorStore();
 
@@ -449,7 +484,8 @@ export default function Toolbar() {
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <LinkButton />
       <ImageButton />
-      <AlignButton/>
+      <AlignButton />
+      <ListButton/>
       {sections[2].map((item) => (
         <ToolBarButton key={item.label} {...item} />
       ))}
