@@ -10,6 +10,7 @@ import { Highlight } from '@tiptap/extension-highlight';
 import { Color } from '@tiptap/extension-color';
 import { Link } from '@tiptap/extension-link';
 
+import Image from '@tiptap/extension-image';
 import ImageResize from 'tiptap-extension-resize-image';
 
 import useEditorStore from '@/store/use-editor-store';
@@ -59,6 +60,7 @@ const Editor = () => {
       TextStyle,
       FontFamily,
       Underline,
+      Image,
       ImageResize,
       Table,
       TableCell,
