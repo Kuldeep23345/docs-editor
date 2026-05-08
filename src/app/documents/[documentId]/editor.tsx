@@ -7,7 +7,8 @@ import { TaskItem, TaskList } from '@tiptap/extension-list';
 import { FontFamily, TextStyle } from '@tiptap/extension-text-style';
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
 import { Highlight } from '@tiptap/extension-highlight';
-import {Color} from '@tiptap/extension-color';
+import { Color } from '@tiptap/extension-color';
+import { Link } from '@tiptap/extension-link';
 
 import ImageResize from 'tiptap-extension-resize-image';
 
@@ -46,6 +47,11 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: 'https',
+      }),
       Highlight.configure({
         multicolor: true,
       }),
