@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link';
 import Image from 'next/image';
 import DocumentInput from './document-input';
@@ -6,19 +7,30 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
   MenubarSub,
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
 } from '@/components/ui/menubar';
-import { FileIcon, FileJsonIcon, FileTextIcon, GlobeIcon } from 'lucide-react';
+import {
+  FileIcon,
+  FileJsonIcon,
+  FilePenIcon,
+  FilePlusIcon,
+  FileTextIcon,
+  GlobeIcon,
+  PrinterIcon,
+  TrashIcon,
+} from 'lucide-react';
 import { BsFilePdf } from 'react-icons/bs';
 
 const Navbar = () => {
   return (
     <nav className="flex items-center justify-between">
       <div className="flex gap-2 items-center">
-        <Link href={'/'} className='-mr-4'>
+        <Link href={'/'} className="-mr-4">
           <Image src="/logo.png" alt="Logo" width={56} height={56} />
         </Link>
         <div className="flex flex-col justify-center items-center">
@@ -29,11 +41,11 @@ const Navbar = () => {
                 <MenubarTrigger className="text-sm font-normal py-0.5 px-1.75 rounded-sm hover:bg-muted h-auto">
                   File
                 </MenubarTrigger>
-                <MenubarContent className='print:hidden'>
+                <MenubarContent className="print:hidden">
                   <MenubarSub>
                     <MenubarSubTrigger>
-                    <FileIcon className="size-4 mr-2" />
-                    Save
+                      <FileIcon className="size-4 mr-2" />
+                      Save
                     </MenubarSubTrigger>
                     <MenubarSubContent>
                       <MenubarItem>
@@ -54,6 +66,24 @@ const Navbar = () => {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
+                  <MenubarItem>
+                    <FilePlusIcon className="size-4 mr-2" />
+                    New Document
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <FilePenIcon className="size-4 mr-2" />
+                    Rename
+                  </MenubarItem>
+                  <MenubarItem>
+                    <TrashIcon className="size-4 mr-2" />
+                    Remove
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem onClick={() => window.print()}>
+                    <PrinterIcon className="size-4 mr-2" />
+                    Print <MenubarShortcut>⌘P</MenubarShortcut>
+                  </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
