@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import DocumentInput from './document-input';
@@ -25,6 +25,7 @@ import {
   ItalicIcon,
   PrinterIcon,
   Redo2Icon,
+  RemoveFormattingIcon,
   StrikethroughIcon,
   TextIcon,
   TrashIcon,
@@ -113,29 +114,16 @@ const Navbar = () => {
                   Insert
                 </MenubarTrigger>
                 <MenubarContent>
-
-           <MenubarSub>
-            <MenubarSubTrigger>
-            Table
-            </MenubarSubTrigger>  
-            <MenubarSubContent>
-               <MenubarItem>
-                  1 x 1
-                </MenubarItem>
-                <MenubarItem>
-                  2 x 2
-                </MenubarItem>
-                <MenubarItem>
-                  3 x 3
-                </MenubarItem>
-                 <MenubarItem>
-                  4 x 4
-                </MenubarItem>
-                 <MenubarItem>
-                  5 x 5
-                </MenubarItem>
-            </MenubarSubContent>
-           </MenubarSub>
+                  <MenubarSub>
+                    <MenubarSubTrigger>Table</MenubarSubTrigger>
+                    <MenubarSubContent>
+                      <MenubarItem>1 x 1</MenubarItem>
+                      <MenubarItem>2 x 2</MenubarItem>
+                      <MenubarItem>3 x 3</MenubarItem>
+                      <MenubarItem>4 x 4</MenubarItem>
+                      <MenubarItem>5 x 5</MenubarItem>
+                    </MenubarSubContent>
+                  </MenubarSub>
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
@@ -143,31 +131,34 @@ const Navbar = () => {
                   Format
                 </MenubarTrigger>
                 <MenubarContent>
-                 <MenubarSub>
+                  <MenubarSub>
                     <MenubarSubTrigger>
-                    <TextIcon className='size-4 mr-2'/>
-                    Text
-                    </MenubarSubTrigger>  
+                      <TextIcon className="size-4 mr-2" />
+                      Text
+                    </MenubarSubTrigger>
                     <MenubarSubContent>
-                       <MenubarItem>
-                        <BoldIcon className="size-4 mr-2"/>
+                      <MenubarItem>
+                        <BoldIcon className="size-4 mr-2" />
                         Bold <MenubarShortcut>⌘B</MenubarShortcut>
-                       </MenubarItem>
-                       <MenubarItem>
-                        <ItalicIcon className="size-4 mr-2"/>
+                      </MenubarItem>
+                      <MenubarItem>
+                        <ItalicIcon className="size-4 mr-2" />
                         Italic <MenubarShortcut>⌘I</MenubarShortcut>
-                       </MenubarItem>
-                       <MenubarItem>
-                        <UnderlineIcon className="size-4 mr-2"/>
+                      </MenubarItem>
+                      <MenubarItem>
+                        <UnderlineIcon className="size-4 mr-2" />
                         Underline <MenubarShortcut>⌘U</MenubarShortcut>
-                       </MenubarItem>
-                       <MenubarItem>
-                        <StrikethroughIcon className="size-4 mr-2"/>
+                      </MenubarItem>
+                      <MenubarItem>
+                        <StrikethroughIcon className="size-4 mr-2" />
                         Strikethrough <MenubarShortcut>⌘S</MenubarShortcut>
-                       </MenubarItem>
-                     
+                      </MenubarItem>
                     </MenubarSubContent>
-                   </MenubarSub>
+                  </MenubarSub>
+                  <MenubarItem>
+                    <RemoveFormattingIcon className="size-4 mr-2" />
+                    Clear Formatting
+                  </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
