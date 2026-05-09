@@ -15,15 +15,20 @@ import {
   MenubarTrigger,
 } from '@/components/ui/menubar';
 import {
+  BoldIcon,
   FileIcon,
   FileJsonIcon,
   FilePenIcon,
   FilePlusIcon,
   FileTextIcon,
   GlobeIcon,
+  ItalicIcon,
   PrinterIcon,
   Redo2Icon,
+  StrikethroughIcon,
+  TextIcon,
   TrashIcon,
+  UnderlineIcon,
   Undo2Icon,
 } from 'lucide-react';
 import { BsFilePdf } from 'react-icons/bs';
@@ -138,10 +143,31 @@ const Navbar = () => {
                   Format
                 </MenubarTrigger>
                 <MenubarContent>
-                  <MenubarItem>
-                    <FileIcon className="size-4 mr-2" />
-                    Save
-                  </MenubarItem>
+                 <MenubarSub>
+                    <MenubarSubTrigger>
+                    <TextIcon className='size-4 mr-2'/>
+                    Text
+                    </MenubarSubTrigger>  
+                    <MenubarSubContent>
+                       <MenubarItem>
+                        <BoldIcon className="size-4 mr-2"/>
+                        Bold <MenubarShortcut>⌘B</MenubarShortcut>
+                       </MenubarItem>
+                       <MenubarItem>
+                        <ItalicIcon className="size-4 mr-2"/>
+                        Italic <MenubarShortcut>⌘I</MenubarShortcut>
+                       </MenubarItem>
+                       <MenubarItem>
+                        <UnderlineIcon className="size-4 mr-2"/>
+                        Underline <MenubarShortcut>⌘U</MenubarShortcut>
+                       </MenubarItem>
+                       <MenubarItem>
+                        <StrikethroughIcon className="size-4 mr-2"/>
+                        Strikethrough <MenubarShortcut>⌘S</MenubarShortcut>
+                       </MenubarItem>
+                     
+                    </MenubarSubContent>
+                   </MenubarSub>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
