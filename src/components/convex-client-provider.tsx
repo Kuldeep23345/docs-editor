@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { ClerkProvider, useAuth,SignIn } from '@clerk/nextjs';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexReactClient, AuthLoading, Authenticated, Unauthenticated } from 'convex/react';
+import FullScreenLoader from './fullscreen-loader';
 
 if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
   throw new Error('Missing NEXT_PUBLIC_CONVEX_URL in your .env file');
@@ -21,7 +22,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
           </div>
         </Unauthenticated>
         <AuthLoading>
-          <p>Loading auth...</p>
+          <FullScreenLoader label='Auth Loading'/>
         </AuthLoading>
       </ConvexProviderWithClerk>
     </ClerkProvider>
