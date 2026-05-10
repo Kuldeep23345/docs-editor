@@ -1,3 +1,4 @@
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.className}`}>
       <body className="min-h-full flex flex-col">
+        <NuqsAdapter>
           {children}
+        </NuqsAdapter>
       </body>
     </html>
   );

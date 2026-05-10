@@ -1,9 +1,9 @@
-interface DocuemntLayoutProps {
+interface DocumentLayoutProps {
   children: React.ReactNode;
 }
 
-const DocuemntLayout = ({ children }: DocuemntLayoutProps) => {
+const DocumentLayout = ({ children }: DocumentLayoutProps) => {
   return <div>{children}</div>;
 };
 
-export default DocuemntLayout;
+export default DocumentLayout;
