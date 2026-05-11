@@ -4,12 +4,22 @@ import { SiGoogledocs } from 'react-icons/si';
 import { format } from 'date-fns';
 import { Building2Icon, CircleUserIcon, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu } from '@/components/ui/dropdown-menu';
+import DocumentMenu from './document-menu';
+import { useRouter } from 'next/navigation';
 
 interface DocumentRowProps {
   document: Doc<'documents'>;
 }
 
+
+
 export default function DocumentRow({ document }: DocumentRowProps) {
+
+  const onNewTabClick = (id:string) => {
+    window.open(`/document/${id}`, '_blank');
+  };
+
   return (
     <TableRow className="cursor-pointer">
       <TableCell className="w-12.5">
@@ -28,9 +38,10 @@ export default function DocumentRow({ document }: DocumentRowProps) {
         {format(document._creationTime, 'MMM dd, yyyy')}
       </TableCell>
       <TableCell className='flex justify-end'>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <MoreVertical className="size-4" />
-        </Button>
+      <DocumentMenu 
+      documentId={document._id}
+      title={document.title}
+      onNewTab={onNewTabClick}/>
       </TableCell>
     </TableRow>
   );
