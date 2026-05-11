@@ -16,6 +16,7 @@ import {
 } from './ui/dialog';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { toast } from 'sonner';
 
 interface RenameDialogProps {
   documentId: Id<'documents'>;
@@ -34,6 +35,9 @@ const RenameDialog = ({ documentId, initialTitle, children }: RenameDialogProps)
     setIsUpdating(true);
     updateDocument({ id: documentId, title: title.trim() || 'Untitled' })
       .then(() => setOpen(false))
+      .catch(()=>{
+        toast.error("Failed to update document")
+      })
       .finally(() => {
         setIsUpdating(false);
       });
