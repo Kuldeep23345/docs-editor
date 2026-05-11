@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import DocumentRow from './document-row';
+import { Button } from '@/components/ui/button';
 
 interface DocumentsTableProps {
   documents: Doc<'documents'>[] | undefined;
@@ -31,8 +32,8 @@ const DocumentsTable = ({ documents, status, loadMore }: DocumentsTableProps) =>
             <TableRow className="hover:bg-transparent  border-none">
               <TableHead>Name</TableHead>
               <TableHead>&nbsp;</TableHead>
-              <TableHead className='hidden md:table-cell'>Shared</TableHead>
-              <TableHead className='hidden md:table-cell'>Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Shared</TableHead>
+              <TableHead className="hidden md:table-cell">Created at</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -43,13 +44,21 @@ const DocumentsTable = ({ documents, status, loadMore }: DocumentsTableProps) =>
                 </TableCell>
               </TableRow>
             ) : (
-              documents.map((document) => (
-                <DocumentRow key={document._id} document={document} />
-              ))
+              documents.map((document) => <DocumentRow key={document._id} document={document} />)
             )}
           </TableBody>
         </Table>
       )}
+      <div className="flex items-center justify-center">
+        <Button
+          variant={'ghost'}
+          size={'sm'}
+          onClick={() => loadMore(5)}
+          disabled={status !== 'CanLoadMore'}
+        >
+          {status == 'CanLoadMore' ? 'Load more...' : 'End of results'}
+        </Button>
+      </div>
     </div>
   );
 };
