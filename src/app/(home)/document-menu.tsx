@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Id } from '../../../convex/_generated/dataModel';
-import { ExternalLinkIcon, MoreVertical, TrashIcon } from 'lucide-react';
+import { ExternalLinkIcon, MoreVertical, PenIcon, TrashIcon } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import RemoveDialog from '@/components/remove-dialog';
+import RenameDialog from '@/components/rename-dialog';
 
 interface DocumentMenuProps {
   documentId: Id<'documents'>;
@@ -19,11 +20,20 @@ const DocumentMenu = ({ documentId, title, onNewTab }: DocumentMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button variant="ghost" size="icon" className="rounded-full" onClick={(e) => e.stopPropagation()}>
           <MoreVertical className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full" align="end">
+        <RenameDialog documentId={documentId} initialTitle={title}>
+          <DropdownMenuItem
+            onClick={(e) => e.stopPropagation()}
+            onSelect={(e) => e.preventDefault()}
+          >
+            <PenIcon className="size-4 mr-2" />
+            Rename
+          </DropdownMenuItem>
+        </RenameDialog>
         <RemoveDialog documentId={documentId}>
           <DropdownMenuItem
             onClick={(e) => e.stopPropagation()}
@@ -33,7 +43,12 @@ const DocumentMenu = ({ documentId, title, onNewTab }: DocumentMenuProps) => {
             Remove
           </DropdownMenuItem>
         </RemoveDialog>
-        <DropdownMenuItem onClick={() => onNewTab(documentId)}>
+        <DropdownMenuItem 
+          onClick={(e) => {
+            e.stopPropagation();
+            onNewTab(documentId);
+          }}
+        >
           <ExternalLinkIcon className="size-4 mr-2" />
           Open in a new tab
         </DropdownMenuItem>

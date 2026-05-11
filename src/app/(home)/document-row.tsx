@@ -12,16 +12,10 @@ interface DocumentRowProps {
   document: Doc<'documents'>;
 }
 
-
-
 export default function DocumentRow({ document }: DocumentRowProps) {
-
-  const onNewTabClick = (id:string) => {
-    window.open(`/document/${id}`, '_blank');
-  };
-
+  const router = useRouter();
   return (
-    <TableRow className="cursor-pointer">
+    <TableRow onClick={() => router.push(`/documents/${document._id}`)} className="cursor-pointer">
       <TableCell className="w-12.5">
         <SiGoogledocs className="size-6 fill-blue-500" />
       </TableCell>
@@ -37,11 +31,8 @@ export default function DocumentRow({ document }: DocumentRowProps) {
       <TableCell className="text-muted-foreground hidden md:table-cell">
         {format(document._creationTime, 'MMM dd, yyyy')}
       </TableCell>
-      <TableCell className='flex justify-end'>
-      <DocumentMenu 
-      documentId={document._id}
-      title={document.title}
-      onNewTab={onNewTabClick}/>
+      <TableCell className="flex justify-end">
+        <DocumentMenu documentId={document._id} title={document.title} onNewTab={(id) => window.open(`/documents/${id}`, '_blank')} />
       </TableCell>
     </TableRow>
   );

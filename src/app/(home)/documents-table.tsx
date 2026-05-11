@@ -35,21 +35,19 @@ const DocumentsTable = ({ documents, status, loadMore }: DocumentsTableProps) =>
               <TableHead className='hidden md:table-cell'>Created at</TableHead>
             </TableRow>
           </TableHeader>
-          {documents.length === 0 ? (
-            <TableBody>
+          <TableBody>
+            {documents.length === 0 ? (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
                   No documents found
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ) : (
-            <TableBody>
-              {documents.map((document)=>(
-              <DocumentRow key={document._id}  document={document}/>
-              ))}
-            </TableBody>
-          )}
+            ) : (
+              documents.map((document) => (
+                <DocumentRow key={document._id} document={document} />
+              ))
+            )}
+          </TableBody>
         </Table>
       )}
     </div>
