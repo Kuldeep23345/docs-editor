@@ -75,7 +75,7 @@ export const updateById = mutation({
       throw new ConvexError('Document not found');
     }
     const isOwner = document.ownerId === user.subject;
-    const isOrgMember = document.organizationId === organizationId;
+    const isOrgMember = !!(document.organizationId && document.organizationId === organizationId);
     if (!isOwner && !isOrgMember) {
       throw new ConvexError('You are not authorized to delete this document');
     }
@@ -95,7 +95,7 @@ export const removeById = mutation({
       throw new ConvexError('Document not found');
     }
     const isOwner = document.ownerId === user.subject;
-    const isOrgMember = document.organizationId === organizationId;
+    const isOrgMember = !!(document.organizationId && document.organizationId === organizationId);
     if (!isOwner && !isOrgMember) {
       throw new ConvexError('You are not authorized to delete this document');
     }
