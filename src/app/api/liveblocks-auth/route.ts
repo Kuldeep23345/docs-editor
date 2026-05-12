@@ -9,9 +9,9 @@ const liveblocks = new Liveblocks({
 });
 
 export async function POST(request: Request) {
-  const { sessionClaims } = await auth();
+  const { userId, orgId } = await auth();
 
-  if (!sessionClaims) {
+  if (!userId) {
     return new Response('Unauthorized', { status: 401 });
   }
   const user = await currentUser();
@@ -26,15 +26,24 @@ export async function POST(request: Request) {
     return new Response('Document not found', { status: 404 });
   }
 
-  const isOwner = (document.ownerId = user.id);
-  const isOrganizationMemeber = !!(document.organizationId && document.organizationId === sessionClaims.org_id);
+  const isOwner = document.ownerId === userId;
+  const isOrganizationMember = !!(document.organizationId && document.organizationId === orgId);
 
-  if (!isOwner && !isOrganizationMemeber) {
+  console.log({
+    isOwner,
+    isOrganizationMember,
+    documentOwnerId: document.ownerId,
+    userId,
+    documentOrgId: document.organizationId,
+    orgId,
+  });
+
+  if (!isOwner && !isOrganizationMember) {
     return new Response('Unauthorized', { status: 401 });
   }
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name: user.fullName ?? 'Anonymous',
+      name: user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous'),
       avatar: user.imageUrl ?? '',
     },
   });
