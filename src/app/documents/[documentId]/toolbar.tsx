@@ -28,6 +28,7 @@ import {
   UnderlineIcon,
   Undo2,
   UploadIcon,
+  createLucideIcon,
 } from 'lucide-react';
 import useEditorStore from '@/store/use-editor-store';
 import { Separator } from '@/components/ui/separator';
@@ -44,7 +45,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -519,8 +520,20 @@ const ToolBarButton = ({ onClick, isActive, icon: Icon }: ToolBarButtonProps) =>
   );
 };
 
+export const SpellCheckOffIcon = createLucideIcon('SpellCheckOff', [
+  ['path', { d: 'm6 16 6-12 6 12', key: '1' }],
+  ['path', { d: 'M8 12h8', key: '2' }],
+]);
+
 export default function Toolbar() {
   const { editor } = useEditorStore();
+  const [isSpellCheck, setIsSpellCheck] = useState(true);
+
+  useEffect(() => {
+    if (editor) {
+       setIsSpellCheck(editor.view.dom.getAttribute('spellcheck') !== 'false');
+    }
+  }, [editor]);
   
   const sections: { icon: LucideIcon; label: string; isActive?: boolean; onClick: () => void }[][] =
     [
@@ -545,11 +558,13 @@ export default function Toolbar() {
         },
         {
           label: 'Spell Check',
-          icon: SpellCheckIcon,
-          isActive: false,
+          icon: isSpellCheck ? SpellCheckIcon : SpellCheckOffIcon,
+          isActive: isSpellCheck,
           onClick: () => {
             const current = editor?.view.dom.getAttribute('spellcheck');
-            editor?.view.dom.setAttribute('spellcheck', current === 'false' ? 'true' : 'false');
+            const newValue = current === 'false' ? 'true' : 'false';
+            editor?.view.dom.setAttribute('spellcheck', newValue);
+            setIsSpellCheck(newValue === 'true');
           },
         },
       ],
