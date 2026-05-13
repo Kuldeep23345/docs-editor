@@ -1,5 +1,5 @@
 'use client'
-import { Preloaded, usePreloadedQuery } from 'convex/react';
+import { useQuery } from 'convex/react';
 import Editor from './editor';
 import Navbar from './navbar';
 import { Room } from './room';
@@ -10,40 +10,50 @@ import { useEffect } from 'react';
 import { ClientSideSuspense } from '@liveblocks/react/suspense';
 import { LoaderIcon } from 'lucide-react';
 import FullScreenLoader from '@/components/fullscreen-loader';
+import { Id } from '../../../../convex/_generated/dataModel';
 
 interface DocumentPageProps {
- preloadedDocument:Preloaded<typeof api.document.getById>
+ id: Id<"documents">;
 }
 
-const Document= ({ preloadedDocument }: DocumentPageProps) => {
-  const document = usePreloadedQuery(preloadedDocument);
+const Document= ({ id }: DocumentPageProps) => {
+  const document = useQuery(api.document.getById, { id });
   const router = useRouter();
 
   useEffect(() => {
-    if (!document) {
+    if (document === null) {
       router.push('/');
     }
   }, [document, router]);
 
-  if (!document) {
+  if (document === null) {
     return null;
   }
+
+  const isLoading = document === undefined;
+  const navbarData = document || { title: 'Loading...', _id: id } as any;
 
   return (
     <Room>
       <div className="min-h-screen bg-[#FAFBFD]">
         <div className="flex flex-col px-4 pt-2 gap-y-2 fixed top-0 left-0 right-0 z-10 bg-[#FAFBFD] print:hidden ">
-          <Navbar data={document} />
+          <Navbar data={navbarData} />
           <Toolbar />
         </div>
         <div className="pt-28">
-          <ClientSideSuspense fallback={
+          {isLoading ? (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-112px)] gap-2">
               <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
             </div>
-          }>
-            <Editor initialContent={document.initialContent} />
-          </ClientSideSuspense>
+          ) : (
+            <ClientSideSuspense fallback={
+              <div className="flex flex-col items-center justify-center h-[calc(100vh-112px)] gap-2">
+                <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
+              </div>
+            }>
+              <Editor initialContent={document.initialContent} />
+            </ClientSideSuspense>
+          )}
         </div>
       </div>
     </Room>
