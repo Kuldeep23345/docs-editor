@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { LiveblocksProvider, RoomProvider, ClientSideSuspense } from '@liveblocks/react/suspense';
 import { useParams } from 'next/navigation';
 import FullScreenLoader from '@/components/fullscreen-loader';
@@ -33,23 +33,25 @@ export function Room({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  const resolveUsers = useCallback(async ({ userIds }: { userIds: string[] }) => {
+    const users = await getUsersByIds(userIds);
+    return userIds.map((id) => users.find((user) => user.id === id) ?? undefined);
+  }, []);
+
+  const resolveRoomsInfo = useCallback(async ({ roomIds }: { roomIds: string[] }) => {
+    const docs = await getDocument(roomIds as Id<'documents'>[]);
+    return docs.map((doc) => ({
+      id: doc.id,
+      name: doc.name,
+    }));
+  }, []);
+
   return (
     <LiveblocksProvider
       throttle={16}
-      authEndpoint={async () => {
-        const endpoint = '/api/liveblocks-auth';
-        const room = params.documentId as string;
-
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          body: JSON.stringify({ room }),
-        });
-        return await response.json();
-      }}
-      resolveUsers={async ({ userIds }) => {
-        const users = await getUsersByIds(userIds);
-        return userIds.map((id) => users.find((user) => user.id === id) ?? undefined);
-      }}
+      authEndpoint="/api/liveblocks-auth"
+      resolveUsers={resolveUsers}
       resolveMentionSuggestions={({ text }) => {
         let filteredUsers = users;
 
@@ -60,13 +62,7 @@ export function Room({ children }: { children: ReactNode }) {
         }
         return filteredUsers.map((user) => user.id) as string[];
       }}
-      resolveRoomsInfo={async ({ roomIds }) => {
-        const docs = await getDocument(roomIds as Id<'documents'>[]);
-        return docs.map((doc) => ({
-          id: doc.id,
-          name: doc.name,
-        }));
-      }}
+      resolveRoomsInfo={resolveRoomsInfo}
     >
       <RoomProvider
         id={params.documentId as string}

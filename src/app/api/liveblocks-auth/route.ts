@@ -1,53 +1,82 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { Liveblocks } from '@liveblocks/node';
-import { NextResponse } from 'next/server';
 import { ConvexHttpClient } from 'convex/browser';
 import { api } from '../../../../convex/_generated/api';
+
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 const liveblocks = new Liveblocks({
   secret: process.env.LIVEBLOCKS_SECRET_KEY!,
 });
 
 export async function POST(request: Request) {
-  const { userId, orgId } = await auth();
+  try {
+    const { userId, orgId } = await auth();
+    const user = await currentUser();
 
-  if (!userId) {
-    return new Response('Unauthorized', { status: 401 });
+    if (!userId || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { room } = await request.json();
+
+    const name =
+      user.fullName ??
+      (`${user.firstName} ${user.lastName}`.trim() ||
+        user.emailAddresses[0]?.emailAddress ||
+        'Anonymous');
+
+    const session = liveblocks.prepareSession(user.id, {
+      userInfo: {
+        name,
+        avatar: user.imageUrl,
+      },
+    });
+
+    if (room) {
+      // Room-specific auth: verify document access
+      const document = await convex.query(api.document.getById, { id: room }).catch((err) => {
+        console.error('Convex query error:', err);
+        return null;
+      });
+
+      if (!document) {
+        return new Response(JSON.stringify({ error: 'Document not found' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      const isOwner = document.ownerId === userId;
+      const isOrganizationMember = !!(document.organizationId && document.organizationId === orgId);
+
+      if (!isOwner && !isOrganizationMember) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      session.allow(room, session.FULL_ACCESS);
+    } else {
+      // Provider-level auth (e.g. inbox notifications) — allow all rooms
+      session.allow('*', session.FULL_ACCESS);
+    }
+
+    const { body, status } = await session.authorize();
+
+    return new Response(body, {
+      status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error: unknown) {
+    console.error('Liveblocks Auth Error:', error);
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-  const user = await currentUser();
-
-  if (!user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
-  const { room } = await request.json();
-
-  const document = await convex.query(api.document.getById, { id: room });
-  if (!document) {
-    return new Response('Document not found', { status: 404 });
-  }
-
-  const isOwner = document.ownerId === userId;
-  const isOrganizationMember = !!(document.organizationId && document.organizationId === orgId);
-
-  console.log({
-    isOwner,
-    isOrganizationMember,
-    documentOwnerId: document.ownerId,
-    userId,
-    documentOrgId: document.organizationId,
-    orgId,
-  });
-
-  if (!isOwner && !isOrganizationMember) {
-    return new Response('Unauthorized', { status: 401 });
-  }
-  const session = liveblocks.prepareSession(user.id, {
-    userInfo: {
-      name: user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous'),
-      avatar: user.imageUrl ?? '',
-    },
-  });
-  session.allow(room, session.FULL_ACCESS);
-  const { body, status } = await session.authorize();
-  return new Response(body, { status });
 }
