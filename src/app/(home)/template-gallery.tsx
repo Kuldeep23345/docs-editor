@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import {
   Carousel,
   CarouselContent,
@@ -52,15 +54,17 @@ const TemplateGallery = () => {
                 >
                   <button
                     disabled={isCreating}
-                    onClick={() => onTemplate(template.label,"")}
-                    style={{
-                      backgroundImage: `url(${template.imageUrl})`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                    className="size-full hover:border-blue-500 rounded-sm b border hover:bg-blue-50 transition flex flex-col items-center justify-center gap-y-4 bg-white"
-                  />
+                    onClick={() => onTemplate(template.label, template.initialContent)}
+                    className="size-full hover:border-blue-500 rounded-sm border hover:bg-blue-50 transition flex flex-col items-center justify-center bg-white relative overflow-hidden"
+                  >
+                    <Image 
+                      src={template.imageUrl}
+                      alt={template.label}
+                      fill
+                      className="object-cover object-center"
+                      priority={template.id === 'blank' || template.id === 'software-proposal' || template.id === 'project-proposal'}
+                    />
+                  </button>
 
                   <p className="ml-1 text-sm font-medium truncate">{template.label}</p>
                 </div>

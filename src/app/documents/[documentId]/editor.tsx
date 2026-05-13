@@ -23,12 +23,18 @@ import { useLiveblocksExtension, FloatingToolbar } from '@liveblocks/react-tipta
 import { Threads } from './threads';
 import { useStorage } from '@liveblocks/react';
 
+interface EditorProps {
+  initialContent?: string | undefined;
+}
 
-const Editor = () => {
+const Editor = ({ initialContent }: EditorProps) => {
   const leftMargin = useStorage((storage) => storage.leftMargin);
   const rightMargin = useStorage((storage) => storage.rightMargin);
 
-  const liveblocks = useLiveblocksExtension();
+  const liveblocks = useLiveblocksExtension({
+    initialContent,
+    offlineSupport_experimental: true,
+  });
   const { setEditor } = useEditorStore();
   const editor = useEditor({
     onCreate: ({ editor }) => {

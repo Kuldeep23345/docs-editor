@@ -68,9 +68,7 @@ export function Room({ children }: { children: ReactNode }) {
         id={params.documentId as string}
         initialStorage={{ leftMargin: 56, rightMargin: 56 }}
       >
-        <ClientSideSuspense fallback={<FullScreenLoader label="Loading Doc..." />}>
-          {children}
-        </ClientSideSuspense>
+        {children}
       </RoomProvider>
     </LiveblocksProvider>
   );
