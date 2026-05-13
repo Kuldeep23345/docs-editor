@@ -80,7 +80,7 @@ const LineHeightButton = () => {
             key={value}
             onClick={() => editor?.chain().focus().setLineHeight(value).run()}
             className={cn(
-              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
               editor?.getAttributes('paragraph').lineHeight === value && 'bg-neutral-200/80'
             )}
           >
@@ -205,7 +205,7 @@ const ListButton = () => {
             key={label}
             onClick={onClick}
             className={cn(
-              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
               isActive() && 'bg-neutral-200/80'
             )}
           >
@@ -240,7 +240,7 @@ const AlignButton = () => {
             key={value}
             onClick={() => editor?.chain().focus().setTextAlign(value).run()}
             className={cn(
-              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
               editor?.isActive({ textAlign: value }) && 'bg-neutral-200/80'
             )}
           >
@@ -447,7 +447,7 @@ const HeadingLevelButton = () => {
               }
             }}
             className={cn(
-              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80',
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
               (value === 0 && !editor?.isActive('heading')) ||
                 (editor?.isActive('heading', { level: value }) && 'bg-neutral-200/80')
             )}
@@ -464,17 +464,18 @@ const FontFamilyButton = () => {
   const { editor } = useEditorStore();
 
   const fonts = [
-    { label: 'Arial', value: 'Arial' },
-    { label: 'Georgia', value: 'Georgia' },
-    { label: 'Palatino', value: 'Palatino' },
-    { label: 'Impact', value: 'Impact' },
-    { label: 'Verdana', value: 'Verdana' },
-    { label: 'Helvetica', value: 'Helvetica' },
-    { label: 'Garamond', value: 'Garamond' },
-    { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-    { label: 'Courier New', value: 'Courier New' },
-    { label: 'Comic Sans MS', value: 'Comic Sans MS' },
-    { label: 'TimesNewRoman', value: 'Times New Roman' },
+    { label: 'Arial', value: 'Arial, Helvetica, "Liberation Sans", sans-serif' },
+    { label: 'Code', value: 'Consolas, Monaco, "Ubuntu Mono", "DejaVu Sans Mono", monospace' },
+    { label: 'Oswald', value: '"Oswald", sans-serif' },
+    { label: 'Georgia', value: 'Georgia, "Bitstream Charter", serif' },
+    { label: 'Verdana', value: 'Verdana, Geneva, "DejaVu Sans", sans-serif' },
+    { label: 'Pacifico', value: '"Pacifico", cursive' },
+    { label: 'System UI', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    { label: 'Arial Black', value: '"Arial Black", Gadget, "DejaVu Sans", sans-serif' },
+    { label: 'Courier New', value: '"Courier New", Courier, "Liberation Mono", monospace' },
+    { label: 'Brush Script', value: '"Brush Script MT", "Brush Script Std", "Lucida Calligraphy", cursive' },
+    { label: 'Playfair Display', value: '"Playfair Display", serif' },
+    { label: 'Times New Roman', value: '"Times New Roman", Times, "Liberation Serif", serif' },
   ];
 
   return (
@@ -482,7 +483,9 @@ const FontFamilyButton = () => {
       <DropdownMenuTrigger asChild>
         <button className="h-7 w-30 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <span className="truncate">
-            {editor?.getAttributes('textStyle').fontFamily || 'Arial'}
+            {editor?.getAttributes('textStyle').fontFamily 
+              ? fonts.find(f => f.value === editor?.getAttributes('textStyle').fontFamily)?.label || 'Arial'
+              : 'Arial'}
           </span>
           <ChevronDownIcon className="ml-2 size-4 shrink-0" />
         </button>
@@ -492,8 +495,8 @@ const FontFamilyButton = () => {
           <button
             key={value}
             className={cn(
-              'flex items-center gap-x-2 px-2 py-1 rounded-sm',
-              editor?.getAttributes('textStyle')?.fontFamily === value && 'bg-enutral-200/80'
+              'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
+              editor?.getAttributes('textStyle')?.fontFamily === value && 'bg-neutral-200/80'
             )}
             style={{ fontFamily: value }}
             onClick={() => editor?.chain().focus().setFontFamily(value).run()}
