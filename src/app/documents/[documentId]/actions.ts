@@ -26,11 +26,19 @@ export async function getUser() {
       : undefined
   );
 
-  const users = response.data.map((user) => ({
-    id: user.id,
-    name: user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous'),
-    avatar: user.imageUrl,
-  }));
+  const users = response.data.map((user) => {
+    const name = user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous');
+    const nameToNumber = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hue = Math.abs(nameToNumber) % 360;
+    const color = `hsl(${hue}, 80%, 60%)`;
+
+    return {
+      id: user.id,
+      name,
+      avatar: user.imageUrl,
+      color,
+    };
+  });
   return users;
 }
 
@@ -40,10 +48,18 @@ export async function getUsersByIds(userIds: string[]) {
     userId: userIds,
   });
 
-  const users = response.data.map((user) => ({
-    id: user.id,
-    name: user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous'),
-    avatar: user.imageUrl,
-  }));
+  const users = response.data.map((user) => {
+    const name = user.fullName ?? (`${user.firstName} ${user.lastName}`.trim() || user.emailAddresses[0]?.emailAddress || 'Anonymous');
+    const nameToNumber = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hue = Math.abs(nameToNumber) % 360;
+    const color = `hsl(${hue}, 80%, 60%)`;
+
+    return {
+      id: user.id,
+      name,
+      avatar: user.imageUrl,
+      color,
+    };
+  });
   return users;
 }
