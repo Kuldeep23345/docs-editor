@@ -38,6 +38,7 @@ const Editor = ({ initialContent }: EditorProps) => {
   });
   const { setEditor } = useEditorStore();
   const editor = useEditor({
+    autofocus: true,
     onCreate: ({ editor }) => {
       setEditor(editor);
     },
