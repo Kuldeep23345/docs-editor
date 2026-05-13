@@ -40,10 +40,10 @@ export function Room({ children }: { children: ReactNode }) {
         const endpoint = '/api/liveblocks-auth';
         const room = params.documentId as string;
 
-        const response = await fetch(endpoint,{
-          method:"POST",
-          body:JSON.stringify({room})
-        })
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: JSON.stringify({ room }),
+        });
         return await response.json();
       }}
       resolveUsers={async ({ userIds }) => {
@@ -54,19 +54,24 @@ export function Room({ children }: { children: ReactNode }) {
         let filteredUsers = users;
 
         if (text) {
-          filteredUsers = users.filter((user) => user.name.toLowerCase().includes(text.toLowerCase()));
+          filteredUsers = users.filter((user) =>
+            user.name.toLowerCase().includes(text.toLowerCase())
+          );
         }
         return filteredUsers.map((user) => user.id) as string[];
       }}
-      resolveRoomsInfo={async ({roomIds})=>{
-        const docs = await getDocument(roomIds as Id<"documents">[]);
+      resolveRoomsInfo={async ({ roomIds }) => {
+        const docs = await getDocument(roomIds as Id<'documents'>[]);
         return docs.map((doc) => ({
           id: doc.id,
           name: doc.name,
         }));
       }}
     >
-      <RoomProvider id={params.documentId as string}>
+      <RoomProvider
+        id={params.documentId as string}
+        initialStorage={{ leftMargin: 56, rightMargin: 56 }}
+      >
         <ClientSideSuspense fallback={<FullScreenLoader label="Loading Doc..." />}>
           {children}
         </ClientSideSuspense>

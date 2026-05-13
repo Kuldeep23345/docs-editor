@@ -14,15 +14,20 @@ import TextAlign from '@tiptap/extension-text-align';
 import Image from '@tiptap/extension-image';
 import ImageResize from 'tiptap-extension-resize-image';
 
-import {fontSizeExtension} from "@/extensions/font-size"
+import { fontSizeExtension } from '@/extensions/font-size';
 
 import useEditorStore from '@/store/use-editor-store';
 import { LineHeightExtension } from '@/extensions/line-height';
 import Ruler from './ruler';
-import { useLiveblocksExtension, FloatingToolbar } from "@liveblocks/react-tiptap";
+import { useLiveblocksExtension, FloatingToolbar } from '@liveblocks/react-tiptap';
 import { Threads } from './threads';
+import { useStorage } from '@liveblocks/react';
+
 
 const Editor = () => {
+  const leftMargin = useStorage((storage) => storage.leftMargin);
+  const rightMargin = useStorage((storage) => storage.rightMargin);
+
   const liveblocks = useLiveblocksExtension();
   const { setEditor } = useEditorStore();
   const editor = useEditor({
@@ -49,7 +54,7 @@ const Editor = () => {
     },
     editorProps: {
       attributes: {
-        style: 'padding-left:56px; padding-right:56px;',
+        style: `padding-left: ${leftMargin ?? 56}px; padding-right: ${rightMargin ?? 56}px;`,
         class:
           'focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-204 pt-10 pr-14 pb-10 cursor-text',
       },
@@ -57,7 +62,7 @@ const Editor = () => {
     extensions: [
       liveblocks,
       StarterKit.configure({
-        undoRedo: false,    
+        undoRedo: false,
       }),
       fontSizeExtension,
       LineHeightExtension.configure({
@@ -66,7 +71,6 @@ const Editor = () => {
       }),
       TextAlign.configure({
         types: ['heading', 'paragraph'],
-        
       }),
       Link.configure({
         openOnClick: false,
@@ -96,8 +100,7 @@ const Editor = () => {
 
   return (
     <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0  print:bg-white  print:overflow-visible">
-
-      <Ruler/>
+      <Ruler />
       <div className="min-w-max flex justify-center w-204 py-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <EditorContent editor={editor} />
         <Threads editor={editor} />
