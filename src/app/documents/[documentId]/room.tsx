@@ -4,8 +4,9 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { LiveblocksProvider, RoomProvider, ClientSideSuspense } from '@liveblocks/react/suspense';
 import { useParams } from 'next/navigation';
 import FullScreenLoader from '@/components/fullscreen-loader';
-import { getUser, getUsersByIds } from './actions';
+import { getDocument, getUser, getUsersByIds } from './actions';
 import { toast } from 'sonner';
+import { Id } from '../../../../convex/_generated/dataModel';
 
 type User = {
   id: string;
@@ -57,7 +58,13 @@ export function Room({ children }: { children: ReactNode }) {
         }
         return filteredUsers.map((user) => user.id) as string[];
       }}
-      resolveRoomsInfo={() => []}
+      resolveRoomsInfo={async ({roomIds})=>{
+        const docs = await getDocument(roomIds as Id<"documents">[]);
+        return docs.map((doc) => ({
+          id: doc.id,
+          name: doc.name,
+        }));
+      }}
     >
       <RoomProvider id={params.documentId as string}>
         <ClientSideSuspense fallback={<FullScreenLoader label="Loading Doc..." />}>
