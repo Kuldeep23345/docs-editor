@@ -68,7 +68,7 @@ const LineHeightButton = () => {
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <ListCollapseIcon className="size-4" />
@@ -193,7 +193,7 @@ const ListButton = () => {
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <ListIcon className="size-4" />
@@ -228,7 +228,7 @@ const AlignButton = () => {
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <AlignLeftIcon className="size-4" />
@@ -266,7 +266,6 @@ const ImageButton = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.click();
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -285,7 +284,7 @@ const ImageButton = () => {
   };
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
             <ImageIcon className="size-4" />
@@ -337,6 +336,7 @@ const LinkButton = () => {
 
   return (
     <DropdownMenu
+      modal={false}
       onOpenChange={(open) => open && setValue(editor?.getAttributes('link').href || '')}
     >
       <DropdownMenuTrigger asChild>
@@ -365,7 +365,7 @@ const HighlightColorButton = () => {
     editor?.chain().focus().setHighlight({ color: color.hex }).run();
   };
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <HighlighterIcon className="size-4" />
@@ -387,7 +387,7 @@ const TextColorButton = () => {
     editor?.chain().focus().setColor(color.hex).run();
   };
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <span className="text-xs">A</span>
@@ -423,7 +423,7 @@ const HeadingLevelButton = () => {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <span className="truncate">{getCurrentHeading()}</span>
@@ -448,8 +448,7 @@ const HeadingLevelButton = () => {
             }}
             className={cn(
               'flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 whitespace-nowrap',
-              (value === 0 && !editor?.isActive('heading')) ||
-                (editor?.isActive('heading', { level: value }) && 'bg-neutral-200/80')
+              (value === 0 ? !editor?.isActive('heading') : editor?.isActive('heading', { level: value as Level })) && 'bg-neutral-200/80'
             )}
           >
             {label}
@@ -479,9 +478,9 @@ const FontFamilyButton = () => {
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="h-7 w-30 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+        <button className="h-7 w-32 shrink-0 flex items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
           <span className="truncate">
             {editor?.getAttributes('textStyle').fontFamily 
               ? fonts.find(f => f.value === editor?.getAttributes('textStyle').fontFamily)?.label || 'Arial'
@@ -490,7 +489,7 @@ const FontFamilyButton = () => {
           <ChevronDownIcon className="ml-2 size-4 shrink-0" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-1 flex-col gap-y-1">
+      <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
         {fonts.map(({ label, value }) => (
           <button
             key={value}
@@ -595,7 +594,7 @@ export default function Toolbar() {
         {
           label: 'Comment',
           icon: MessageSquarePlusIcon,
-          onClick: () => editor?.chain().focus().addPendingComment().run(),
+          onClick: () => (editor?.chain().focus() as any).addPendingComment().run(),
           isActive: editor?.isActive('liveblockCommentMark'),
         },
         {

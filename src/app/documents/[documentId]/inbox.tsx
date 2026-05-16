@@ -32,7 +32,7 @@ const InboxMenu = () => {
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant={'ghost'} size={'icon'} className="relative">
             <BellIcon className="size-5" />

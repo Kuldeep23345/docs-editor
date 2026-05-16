@@ -127,7 +127,44 @@
   }
   html {
     @apply font-sans;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
   }
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* neutral-300 */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af; /* neutral-400 */
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+/* Prevent Radix from hiding scrollbar */
+body[style*="overflow: hidden"] {
+  overflow: auto !important;
+  margin-right: 0 !important;
 }
 
 .tiptap {
